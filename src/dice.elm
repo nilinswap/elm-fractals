@@ -1,5 +1,6 @@
 module Main exposing (Model, Msg(..), init, main, subscriptions, svgCirclesForDieFace, update, view)
 
+import Browser
 import Html exposing (..)
 import Html.Attributes
 import Html.Events exposing (..)
@@ -10,7 +11,7 @@ import Svg.Attributes exposing (..)
 
 
 main =
-    Html.program
+    Browser.element
         { init = init
         , view = view
         , update = update
@@ -27,8 +28,8 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+init : () -> ( Model, Cmd Msg )
+init _ =
     ( Model 2, Cmd.none )
 
 
@@ -67,9 +68,9 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ Html.text (toString model.dieFace) ]
+        [ h1 [] [ Html.text (String.fromInt model.dieFace) ]
         , svg
-            [ width "120", height "120", viewBox "0 0 120 120", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style [ ( "padding-left", "20px" ) ] ]
+            [ width "120", height "120", viewBox "0 0 120 120", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style "padding-left" "20px" ]
             (List.append
                 [ rect [ x "1", y "1", width "100", height "100", rx "15", ry "15" ] [] ]
                 (svgCirclesForDieFace model.dieFace)
