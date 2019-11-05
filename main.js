@@ -2314,89 +2314,6 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 
 
 
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
-
-
-
-function _Time_now(millisToPosix)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(millisToPosix(Date.now())));
-	});
-}
-
-var _Time_setInterval = F2(function(interval, task)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
-		return function() { clearInterval(id); };
-	});
-});
-
-function _Time_here()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(
-			A2(elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
-		));
-	});
-}
-
-
-function _Time_getZoneName()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		try
-		{
-			var name = elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
-		}
-		catch (e)
-		{
-			var name = elm$time$Time$Offset(new Date().getTimezoneOffset());
-		}
-		callback(_Scheduler_succeed(name));
-	});
-}
-
-
-
 
 // HELPERS
 
@@ -4384,9 +4301,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Model = function (dieFace) {
-	return {dieFace: dieFace};
-};
+var author$project$Main$Model = {};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4865,190 +4780,21 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
-	return _Utils_Tuple2(
-		author$project$Main$Model(2),
-		elm$core$Platform$Cmd$none);
+	return _Utils_Tuple2(author$project$Main$Model, elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Main$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Main$NewFace = function (a) {
-	return {$: 'NewFace', a: a};
-};
+var author$project$Main$update = F2(
+	function (msg, model) {
+		return _Utils_Tuple2(author$project$Main$Model, elm$core$Platform$Cmd$none);
+	});
+var author$project$Main$Roll = {$: 'Roll'};
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
-var elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
-};
-var elm$core$Task$andThen = _Scheduler_andThen;
-var elm$core$Task$succeed = _Scheduler_succeed;
-var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
-	});
-var elm$random$Random$next = function (_n0) {
-	var state0 = _n0.a;
-	var incr = _n0.b;
-	return A2(elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var elm$random$Random$initialSeed = function (x) {
-	var _n0 = elm$random$Random$next(
-		A2(elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _n0.a;
-	var incr = _n0.b;
-	var state2 = (state1 + x) >>> 0;
-	return elm$random$Random$next(
-		A2(elm$random$Random$Seed, state2, incr));
-};
-var elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
-	});
-var elm$time$Time$customZone = elm$time$Time$Zone;
-var elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var elm$time$Time$millisToPosix = elm$time$Time$Posix;
-var elm$time$Time$now = _Time_now(elm$time$Time$millisToPosix);
-var elm$time$Time$posixToMillis = function (_n0) {
-	var millis = _n0.a;
-	return millis;
-};
-var elm$random$Random$init = A2(
-	elm$core$Task$andThen,
-	function (time) {
-		return elm$core$Task$succeed(
-			elm$random$Random$initialSeed(
-				elm$time$Time$posixToMillis(time)));
-	},
-	elm$time$Time$now);
-var elm$core$Platform$sendToApp = _Platform_sendToApp;
-var elm$random$Random$step = F2(
-	function (_n0, seed) {
-		var generator = _n0.a;
-		return generator(seed);
-	});
-var elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _n1 = A2(elm$random$Random$step, generator, seed);
-			var value = _n1.a;
-			var newSeed = _n1.b;
-			return A2(
-				elm$core$Task$andThen,
-				function (_n2) {
-					return A3(elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2(elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var elm$random$Random$onSelfMsg = F3(
-	function (_n0, _n1, seed) {
-		return elm$core$Task$succeed(seed);
-	});
-var elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
-var elm$random$Random$map = F2(
-	function (func, _n0) {
-		var genA = _n0.a;
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n1 = genA(seed0);
-				var a = _n1.a;
-				var seed1 = _n1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
-var elm$random$Random$cmdMap = F2(
-	function (func, _n0) {
-		var generator = _n0.a;
-		return elm$random$Random$Generate(
-			A2(elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager(elm$random$Random$init, elm$random$Random$onEffects, elm$random$Random$onSelfMsg, elm$random$Random$cmdMap);
-var elm$random$Random$command = _Platform_leaf('Random');
-var elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return elm$random$Random$command(
-			elm$random$Random$Generate(
-				A2(elm$random$Random$map, tagger, generator)));
-	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var elm$core$Bitwise$and = _Bitwise_and;
-var elm$core$Bitwise$xor = _Bitwise_xor;
-var elm$random$Random$peel = function (_n0) {
-	var state = _n0.a;
-	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
-	return ((word >>> 22) ^ word) >>> 0;
-};
-var elm$random$Random$int = F2(
-	function (a, b) {
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
-				var lo = _n0.a;
-				var hi = _n0.b;
-				var range = (hi - lo) + 1;
-				if (!((range - 1) & range)) {
-					return _Utils_Tuple2(
-						(((range - 1) & elm$random$Random$peel(seed0)) >>> 0) + lo,
-						elm$random$Random$next(seed0));
-				} else {
-					var threshhold = (((-range) >>> 0) % range) >>> 0;
-					var accountForBias = function (seed) {
-						accountForBias:
-						while (true) {
-							var x = elm$random$Random$peel(seed);
-							var seedN = elm$random$Random$next(seed);
-							if (_Utils_cmp(x, threshhold) < 0) {
-								var $temp$seed = seedN;
-								seed = $temp$seed;
-								continue accountForBias;
-							} else {
-								return _Utils_Tuple2((x % range) + lo, seedN);
-							}
-						}
-					};
-					return accountForBias(seed0);
-				}
-			});
-	});
-var author$project$Main$update = F2(
-	function (msg, model) {
-		if (msg.$ === 'Roll') {
-			return _Utils_Tuple2(
-				model,
-				A2(
-					elm$random$Random$generate,
-					author$project$Main$NewFace,
-					A2(elm$random$Random$int, 1, 6)));
-		} else {
-			var newFace = msg.a;
-			return _Utils_Tuple2(
-				author$project$Main$Model(newFace),
-				elm$core$Platform$Cmd$none);
-		}
-	});
-var author$project$Main$Roll = {$: 'Roll'};
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$succeed = _Json_succeed;
@@ -5064,266 +4810,117 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$h1 = _VirtualDom_node('h1');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
-var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
 var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var author$project$Main$svgCirclesForDieFace = function (dieFace) {
-	switch (dieFace) {
-		case 1:
-			return _List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('50'),
-							elm$svg$Svg$Attributes$cy('50'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil)
-				]);
-		case 2:
-			return _List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('25'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('75'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil)
-				]);
-		case 3:
-			return _List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('25'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('50'),
-							elm$svg$Svg$Attributes$cy('50'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('75'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil)
-				]);
-		case 4:
-			return _List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('25'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('25'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('75'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('75'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil)
-				]);
-		case 5:
-			return _List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('25'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('25'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('75'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('75'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('50'),
-							elm$svg$Svg$Attributes$cy('50'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil)
-				]);
-		case 6:
-			return _List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('20'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('50'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('25'),
-							elm$svg$Svg$Attributes$cy('80'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('20'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('50'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('75'),
-							elm$svg$Svg$Attributes$cy('80'),
-							elm$svg$Svg$Attributes$r('10'),
-							elm$svg$Svg$Attributes$fill('black')
-						]),
-					_List_Nil)
-				]);
-		default:
-			return _List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('50'),
-							elm$svg$Svg$Attributes$cy('50'),
-							elm$svg$Svg$Attributes$r('50'),
-							elm$svg$Svg$Attributes$fill('red'),
-							elm$svg$Svg$Attributes$stroke('none')
-						]),
-					_List_Nil)
-				]);
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var author$project$Main$view = function (model) {
+	return A2(
+		elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$h1,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						elm$core$String$fromInt(2))
+					])),
+				A2(
+				elm$svg$Svg$svg,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$width('120'),
+						elm$svg$Svg$Attributes$height('120'),
+						elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
+						elm$svg$Svg$Attributes$fill('white'),
+						elm$svg$Svg$Attributes$stroke('black'),
+						elm$svg$Svg$Attributes$strokeWidth('3'),
+						A2(elm$html$Html$Attributes$style, 'padding-left', '20px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$svg$Svg$line,
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$x1('0'),
+								elm$svg$Svg$Attributes$x2('100'),
+								elm$svg$Svg$Attributes$y1('0'),
+								elm$svg$Svg$Attributes$y2('100')
+							]),
+						_List_Nil)
+					])),
+				A2(
+				elm$html$Html$button,
+				_List_fromArray(
+					[
+						elm$html$Html$Events$onClick(author$project$Main$Roll)
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('Roll')
+					]))
+			]));
+};
+var elm$browser$Browser$External = function (a) {
+	return {$: 'External', a: a};
+};
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$browser$Browser$Dom$NotFound = function (a) {
+	return {$: 'NotFound', a: a};
+};
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0.a;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
 	}
 };
+var elm$core$Task$Perform = function (a) {
+	return {$: 'Perform', a: a};
+};
+var elm$core$Task$succeed = _Scheduler_succeed;
+var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5379,126 +4976,6 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
-var elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
-		}
-	});
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$h1 = _VirtualDom_node('h1');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
-var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var author$project$Main$view = function (model) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$h1,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text(
-						elm$core$String$fromInt(model.dieFace))
-					])),
-				A2(
-				elm$svg$Svg$svg,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$width('120'),
-						elm$svg$Svg$Attributes$height('120'),
-						elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
-						elm$svg$Svg$Attributes$fill('white'),
-						elm$svg$Svg$Attributes$stroke('black'),
-						elm$svg$Svg$Attributes$strokeWidth('3'),
-						A2(elm$html$Html$Attributes$style, 'padding-left', '20px')
-					]),
-				A2(
-					elm$core$List$append,
-					_List_fromArray(
-						[
-							A2(
-							elm$svg$Svg$rect,
-							_List_fromArray(
-								[
-									elm$svg$Svg$Attributes$x('1'),
-									elm$svg$Svg$Attributes$y('1'),
-									elm$svg$Svg$Attributes$width('100'),
-									elm$svg$Svg$Attributes$height('100'),
-									elm$svg$Svg$Attributes$rx('15'),
-									elm$svg$Svg$Attributes$ry('15')
-								]),
-							_List_Nil)
-						]),
-					author$project$Main$svgCirclesForDieFace(model.dieFace))),
-				A2(
-				elm$html$Html$button,
-				_List_fromArray(
-					[
-						elm$html$Html$Events$onClick(author$project$Main$Roll)
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text('Roll')
-					]))
-			]));
-};
-var elm$browser$Browser$External = function (a) {
-	return {$: 'External', a: a};
-};
-var elm$browser$Browser$Internal = function (a) {
-	return {$: 'Internal', a: a};
-};
-var elm$browser$Browser$Dom$NotFound = function (a) {
-	return {$: 'NotFound', a: a};
-};
-var elm$core$Basics$never = function (_n0) {
-	never:
-	while (true) {
-		var nvr = _n0.a;
-		var $temp$_n0 = nvr;
-		_n0 = $temp$_n0;
-		continue never;
-	}
-};
-var elm$core$Task$Perform = function (a) {
-	return {$: 'Perform', a: a};
-};
-var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5513,6 +4990,7 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$core$Task$andThen = _Scheduler_andThen;
 var elm$core$Task$map = F2(
 	function (func, taskA) {
 		return A2(
@@ -5545,6 +5023,7 @@ var elm$core$Task$sequence = function (tasks) {
 		elm$core$Task$succeed(_List_Nil),
 		tasks);
 };
+var elm$core$Platform$sendToApp = _Platform_sendToApp;
 var elm$core$Task$spawnCmd = F2(
 	function (router, _n0) {
 		var task = _n0.a;
