@@ -2,12 +2,8 @@ module Main exposing (Model, Msg(..), factorial, init, main, subscriptions, upda
 
 import Browser
 import Html exposing (..)
-import Html.Attributes
+import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import List
-import Random
-import Svg exposing (..)
-import Svg.Attributes exposing (..)
 
 
 main =
@@ -24,13 +20,14 @@ main =
 
 
 type alias Model =
-    { product : Int
+    { num : Int
+    , fact : Int
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model 5, Cmd.none )
+    ( Model 5 120, Cmd.none )
 
 
 
@@ -38,7 +35,8 @@ init _ =
 
 
 type Msg
-    = None
+    = Num String
+    | Submit
 
 
 factorial : Int -> Int
@@ -52,11 +50,16 @@ factorial i =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        fact =
-            factorial model.product
-    in
-    ( { model | product = fact }, Cmd.none )
+    case msg of
+        Num s ->
+            ( { model | num = Maybe.withDefault 0 (String.toInt s) }, Cmd.none )
+
+        Submit ->
+            let
+                fact =
+                    factorial model.num
+            in
+            ( { model | fact = fact }, Cmd.none )
 
 
 
@@ -72,10 +75,16 @@ subscriptions model =
 -- VIEW
 
 
+viewInput : String -> String -> String -> (String -> msg) -> Html msg
+viewInput t p v toMsg =
+    input [ type_ t, placeholder p, value v, onInput toMsg ] []
+
+
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ Html.text (String.fromInt (factorial model.product)) ]
+        [ viewInput "text" "number" "" Num
+        , h1 [] [ Html.text (String.fromInt (factorial model.fact)) ]
 
         --, button [ onClick Roll ] [ Html.text "Roll" ]
         ]
