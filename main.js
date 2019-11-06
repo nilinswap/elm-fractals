@@ -4807,26 +4807,19 @@ var elm$core$Maybe$withDefault = F2(
 var elm$core$String$toInt = _String_toInt;
 var author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'Num') {
-			var s = msg.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{
-						num: A2(
-							elm$core$Maybe$withDefault,
-							0,
-							elm$core$String$toInt(s))
-					}),
-				elm$core$Platform$Cmd$none);
-		} else {
-			var fact = author$project$Main$factorial(model.num);
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{fact: fact}),
-				elm$core$Platform$Cmd$none);
-		}
+		var s = msg.a;
+		var fact = author$project$Main$factorial(model.num);
+		return _Utils_Tuple2(
+			_Utils_update(
+				model,
+				{
+					fact: fact,
+					num: A2(
+						elm$core$Maybe$withDefault,
+						0,
+						elm$core$String$toInt(s))
+				}),
+			elm$core$Platform$Cmd$none);
 	});
 var author$project$Main$Num = function (a) {
 	return {$: 'Num', a: a};
@@ -4973,15 +4966,19 @@ var author$project$Main$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				A4(author$project$Main$viewInput, 'text', 'number', '', author$project$Main$Num),
+				A4(
+				author$project$Main$viewInput,
+				'text',
+				'number',
+				elm$core$String$fromInt(model.num),
+				author$project$Main$Num),
 				A2(
 				elm$html$Html$h1,
 				_List_Nil,
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						elm$core$String$fromInt(
-							author$project$Main$factorial(model.fact)))
+						elm$core$String$fromInt(model.fact))
 					]))
 			]));
 };

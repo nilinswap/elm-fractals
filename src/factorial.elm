@@ -36,7 +36,6 @@ init _ =
 
 type Msg
     = Num String
-    | Submit
 
 
 factorial : Int -> Int
@@ -52,14 +51,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Num s ->
-            ( { model | num = Maybe.withDefault 0 (String.toInt s) }, Cmd.none )
-
-        Submit ->
             let
                 fact =
                     factorial model.num
             in
-            ( { model | fact = fact }, Cmd.none )
+            ( { model | fact = fact, num = Maybe.withDefault 0 (String.toInt s) }, Cmd.none )
 
 
 
@@ -83,8 +79,8 @@ viewInput t p v toMsg =
 view : Model -> Html Msg
 view model =
     div []
-        [ viewInput "text" "number" "" Num
-        , h1 [] [ Html.text (String.fromInt (factorial model.fact)) ]
+        [ viewInput "text" "number" (String.fromInt model.num) Num
+        , h1 [] [ Html.text (String.fromInt model.fact) ]
 
         --, button [ onClick Roll ] [ Html.text "Roll" ]
         ]
