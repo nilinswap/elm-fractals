@@ -4301,7 +4301,9 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Model = {};
+var author$project$Main$Model = function (product) {
+	return {product: product};
+};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4780,18 +4782,27 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
-	return _Utils_Tuple2(author$project$Main$Model, elm$core$Platform$Cmd$none);
+	return _Utils_Tuple2(
+		author$project$Main$Model(5),
+		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Main$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
+var author$project$Main$factorial = function (i) {
+	return (!i) ? 1 : (i * author$project$Main$factorial(i - 1));
+};
 var author$project$Main$update = F2(
 	function (msg, model) {
-		return _Utils_Tuple2(author$project$Main$Model, elm$core$Platform$Cmd$none);
+		var fact = author$project$Main$factorial(model.product);
+		return _Utils_Tuple2(
+			_Utils_update(
+				model,
+				{product: fact}),
+			elm$core$Platform$Cmd$none);
 	});
-var author$project$Main$Roll = {$: 'Roll'};
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -4810,43 +4821,10 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
 var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
@@ -4859,42 +4837,8 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						elm$core$String$fromInt(2))
-					])),
-				A2(
-				elm$svg$Svg$svg,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$width('120'),
-						elm$svg$Svg$Attributes$height('120'),
-						elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
-						elm$svg$Svg$Attributes$fill('white'),
-						elm$svg$Svg$Attributes$stroke('black'),
-						elm$svg$Svg$Attributes$strokeWidth('3'),
-						A2(elm$html$Html$Attributes$style, 'padding-left', '20px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$svg$Svg$line,
-						_List_fromArray(
-							[
-								elm$svg$Svg$Attributes$x1('0'),
-								elm$svg$Svg$Attributes$x2('100'),
-								elm$svg$Svg$Attributes$y1('0'),
-								elm$svg$Svg$Attributes$y2('100')
-							]),
-						_List_Nil)
-					])),
-				A2(
-				elm$html$Html$button,
-				_List_fromArray(
-					[
-						elm$html$Html$Events$onClick(author$project$Main$Roll)
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text('Roll')
+						elm$core$String$fromInt(
+							author$project$Main$factorial(model.product)))
 					]))
 			]));
 };
