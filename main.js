@@ -4808,17 +4808,15 @@ var elm$core$String$toInt = _String_toInt;
 var author$project$Main$update = F2(
 	function (msg, model) {
 		var s = msg.a;
-		var fact = author$project$Main$factorial(model.num);
+		var num = A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$String$toInt(s));
+		var fact = author$project$Main$factorial(num);
 		return _Utils_Tuple2(
 			_Utils_update(
 				model,
-				{
-					fact: fact,
-					num: A2(
-						elm$core$Maybe$withDefault,
-						0,
-						elm$core$String$toInt(s))
-				}),
+				{fact: fact, num: num}),
 			elm$core$Platform$Cmd$none);
 	});
 var author$project$Main$Num = function (a) {

@@ -52,10 +52,13 @@ update msg model =
     case msg of
         Num s ->
             let
+                num =
+                    Maybe.withDefault 0 (String.toInt s)
+
                 fact =
-                    factorial model.num
+                    factorial num
             in
-            ( { model | fact = fact, num = Maybe.withDefault 0 (String.toInt s) }, Cmd.none )
+            ( { model | fact = fact, num = num }, Cmd.none )
 
 
 
