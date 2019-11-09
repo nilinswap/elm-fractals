@@ -4790,8 +4790,8 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
-	var to = A2(author$project$Main$Point, 0, 100);
-	var fro = A2(author$project$Main$Point, 100, 100);
+	var to = A2(author$project$Main$Point, 0, 1000);
+	var fro = A2(author$project$Main$Point, 1000, 1000);
 	var linel = A2(author$project$Main$Line, to, fro);
 	return _Utils_Tuple2(
 		author$project$Main$Model(
@@ -4831,8 +4831,14 @@ var author$project$Main$fractal = F3(
 						author$project$Main$Point,
 						m.x + (((elm$core$Basics$abs(fissionLine.to.y) - fissionLine.fro.y) / 2) | 0),
 						m.y);
+					var ld = _List_fromArray(
+						[
+							A2(author$project$Main$Line, m, a),
+							A2(author$project$Main$Line, m, b),
+							A2(author$project$Main$Line, m, c)
+						]);
 					var llll = _Utils_ap(
-						ll,
+						ld,
 						_Utils_ap(
 							A3(
 								author$project$Main$fractal,
@@ -4862,8 +4868,14 @@ var author$project$Main$fractal = F3(
 							author$project$Main$Point,
 							m.x,
 							m.y + (((elm$core$Basics$abs(fissionLine.to.x) - fissionLine.fro.x) / 2) | 0));
+						var ld = _List_fromArray(
+							[
+								A2(author$project$Main$Line, m, a),
+								A2(author$project$Main$Line, m, b),
+								A2(author$project$Main$Line, m, c)
+							]);
 						var llll = _Utils_ap(
-							ll,
+							ld,
 							_Utils_ap(
 								A3(
 									author$project$Main$fractal,
@@ -5049,7 +5061,7 @@ var author$project$Main$view = function (model) {
 			elm$core$Maybe$withDefault,
 			linel,
 			elm$core$List$head(model.lineList)),
-		2);
+		6);
 	var l = author$project$Main$toSvgList(fractal_l);
 	return A2(
 		elm$html$Html$div,
@@ -5068,9 +5080,9 @@ var author$project$Main$view = function (model) {
 				elm$svg$Svg$svg,
 				_List_fromArray(
 					[
-						elm$svg$Svg$Attributes$width('120'),
-						elm$svg$Svg$Attributes$height('120'),
-						elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
+						elm$svg$Svg$Attributes$width('1000'),
+						elm$svg$Svg$Attributes$height('1000'),
+						elm$svg$Svg$Attributes$viewBox('0 0 2000 2000'),
 						elm$svg$Svg$Attributes$fill('white'),
 						elm$svg$Svg$Attributes$stroke('black'),
 						elm$svg$Svg$Attributes$strokeWidth('3'),

@@ -41,10 +41,10 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     let
         to =
-            Point 0 100
+            Point 0 1000
 
         fro =
-            Point 100 100
+            Point 1000 1000
 
         linel =
             Line to fro
@@ -117,7 +117,7 @@ view model =
             Line to fro
 
         fractal_l =
-            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) 2
+            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) 6
 
         l =
             toSvgList fractal_l
@@ -125,7 +125,7 @@ view model =
     div []
         [ h1 [] [ Html.text (String.fromInt 2) ]
         , svg
-            [ width "120", height "120", viewBox "0 0 120 120", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style "padding-left" "20px" ]
+            [ width "1000", height "1000", viewBox "0 0 2000 2000", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style "padding-left" "20px" ]
             l
         ]
 
@@ -157,8 +157,14 @@ fractal ll fissionLine level =
                         c =
                             Point m.x fissionLine.fro.y
 
+                        ld =
+                            [ Line m a
+                            , Line m b
+                            , Line m c
+                            ]
+
                         llll =
-                            ll
+                            ld
                                 ++ fractal ll (Line m a) (level - 1)
                                 ++ fractal ll (Line m b) (level - 1)
                                 ++ fractal ll (Line m c) (level - 1)
@@ -178,8 +184,14 @@ fractal ll fissionLine level =
                         c =
                             Point fissionLine.fro.x m.y
 
+                        ld =
+                            [ Line m a
+                            , Line m b
+                            , Line m c
+                            ]
+
                         llll =
-                            ll
+                            ld
                                 ++ fractal ll (Line m a) (level - 1)
                                 ++ fractal ll (Line m b) (level - 1)
                                 ++ fractal ll (Line m c) (level - 1)
