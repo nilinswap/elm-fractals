@@ -17,7 +17,6 @@ main =
 
 
 
-
 -- MODEL
 
 
@@ -108,8 +107,20 @@ toSvgList listl =
 view : Model -> Html Msg
 view model =
     let
+        to =
+            Point 0 100
+
+        fro =
+            Point 100 100
+
+        linel =
+            Line to fro
+
+        fractal_l =
+            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) 2
+
         l =
-            toSvgList model.lineList
+            toSvgList fractal_l
     in
     div []
         [ h1 [] [ Html.text (String.fromInt 2) ]
@@ -119,13 +130,66 @@ view model =
         ]
 
 
-fractal: List Line -> Line -> Int -> List Line
-fractal ll fissionLine level  =
-    let
-        m = Point ((fissionLine.to.x + fissionLine.fro.x)//2) ((fissionLine.to.y + fissionLine.fro.y)//2)
-        if fissionLine.to.x == fissionLine.fro.y then
-            a = Point (m.x + fissionLine.to.y )
-            ll ++ [Line m ]
+fractal : List Line -> Line -> Int -> List Line
+fractal ll fissionLine level =
+    if not (level == 0) then
+        let
+            lev =
+                Debug.log "level" level
 
+            lld =
+                Debug.log "ll" ll
 
-    in
+            m =
+                Point ((fissionLine.to.x + fissionLine.fro.x) // 2) ((fissionLine.to.y + fissionLine.fro.y) // 2)
+
+            lll =
+                if fissionLine.to.x == fissionLine.fro.x then
+                    let
+                        a =
+                            Point (m.x + (abs fissionLine.to.y - fissionLine.fro.y) // 2) m.y
+
+                        -- mid to right
+                        b =
+                            Point (m.x - (abs fissionLine.to.y - fissionLine.fro.y) // 2) m.y
+
+                        -- mid to left
+                        c =
+                            Point m.x fissionLine.fro.y
+
+                        llll =
+                            ll
+                                ++ fractal ll (Line m a) (level - 1)
+                                ++ fractal ll (Line m b) (level - 1)
+                                ++ fractal ll (Line m c) (level - 1)
+                    in
+                    llll
+
+                else if fissionLine.to.y == fissionLine.fro.y then
+                    let
+                        a =
+                            Point m.x (m.y + (abs fissionLine.to.x - fissionLine.fro.x) // 2)
+
+                        -- mid to right
+                        b =
+                            Point m.x (m.y - (abs fissionLine.to.x - fissionLine.fro.x) // 2)
+
+                        -- mid to left
+                        c =
+                            Point fissionLine.fro.x m.y
+
+                        llll =
+                            ll
+                                ++ fractal ll (Line m a) (level - 1)
+                                ++ fractal ll (Line m b) (level - 1)
+                                ++ fractal ll (Line m c) (level - 1)
+                    in
+                    llll
+
+                else
+                    ll
+        in
+        lll
+
+    else
+        ll

@@ -4808,6 +4808,92 @@ var author$project$Main$update = F2(
 	function (msg, model) {
 		return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 	});
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var elm$core$Basics$not = _Basics_not;
+var elm$core$Debug$log = _Debug_log;
+var author$project$Main$fractal = F3(
+	function (ll, fissionLine, level) {
+		if (!(!level)) {
+			var m = A2(author$project$Main$Point, ((fissionLine.to.x + fissionLine.fro.x) / 2) | 0, ((fissionLine.to.y + fissionLine.fro.y) / 2) | 0);
+			var lll = function () {
+				if (_Utils_eq(fissionLine.to.x, fissionLine.fro.x)) {
+					var c = A2(author$project$Main$Point, m.x, fissionLine.fro.y);
+					var b = A2(
+						author$project$Main$Point,
+						m.x - (((elm$core$Basics$abs(fissionLine.to.y) - fissionLine.fro.y) / 2) | 0),
+						m.y);
+					var a = A2(
+						author$project$Main$Point,
+						m.x + (((elm$core$Basics$abs(fissionLine.to.y) - fissionLine.fro.y) / 2) | 0),
+						m.y);
+					var llll = _Utils_ap(
+						ll,
+						_Utils_ap(
+							A3(
+								author$project$Main$fractal,
+								ll,
+								A2(author$project$Main$Line, m, a),
+								level - 1),
+							_Utils_ap(
+								A3(
+									author$project$Main$fractal,
+									ll,
+									A2(author$project$Main$Line, m, b),
+									level - 1),
+								A3(
+									author$project$Main$fractal,
+									ll,
+									A2(author$project$Main$Line, m, c),
+									level - 1))));
+					return llll;
+				} else {
+					if (_Utils_eq(fissionLine.to.y, fissionLine.fro.y)) {
+						var c = A2(author$project$Main$Point, fissionLine.fro.x, m.y);
+						var b = A2(
+							author$project$Main$Point,
+							m.x,
+							m.y - (((elm$core$Basics$abs(fissionLine.to.x) - fissionLine.fro.x) / 2) | 0));
+						var a = A2(
+							author$project$Main$Point,
+							m.x,
+							m.y + (((elm$core$Basics$abs(fissionLine.to.x) - fissionLine.fro.x) / 2) | 0));
+						var llll = _Utils_ap(
+							ll,
+							_Utils_ap(
+								A3(
+									author$project$Main$fractal,
+									ll,
+									A2(author$project$Main$Line, m, a),
+									level - 1),
+								_Utils_ap(
+									A3(
+										author$project$Main$fractal,
+										ll,
+										A2(author$project$Main$Line, m, b),
+										level - 1),
+									A3(
+										author$project$Main$fractal,
+										ll,
+										A2(author$project$Main$Line, m, c),
+										level - 1))));
+						return llll;
+					} else {
+						return ll;
+					}
+				}
+			}();
+			var lld = A2(elm$core$Debug$log, 'll', ll);
+			var lev = A2(elm$core$Debug$log, 'level', level);
+			return lll;
+		} else {
+			return ll;
+		}
+	});
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -4921,6 +5007,24 @@ var author$project$Main$toSvgList = function (listl) {
 	var l = A2(elm$core$List$map, author$project$Main$toAtrMsg, listl);
 	return A2(elm$core$List$map, author$project$Main$toSvg, l);
 };
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -4935,7 +5039,18 @@ var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
 var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var author$project$Main$view = function (model) {
-	var l = author$project$Main$toSvgList(model.lineList);
+	var to = A2(author$project$Main$Point, 0, 100);
+	var fro = A2(author$project$Main$Point, 100, 100);
+	var linel = A2(author$project$Main$Line, to, fro);
+	var fractal_l = A3(
+		author$project$Main$fractal,
+		model.lineList,
+		A2(
+			elm$core$Maybe$withDefault,
+			linel,
+			elm$core$List$head(model.lineList)),
+		2);
+	var l = author$project$Main$toSvgList(fractal_l);
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
