@@ -4301,9 +4301,16 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Model = F2(
-	function (num, fact) {
-		return {fact: fact, num: num};
+var author$project$Main$Line = F2(
+	function (to, fro) {
+		return {fro: fro, to: to};
+	});
+var author$project$Main$Model = function (lineList) {
+	return {lineList: lineList};
+};
+var author$project$Main$Point = F2(
+	function (x, y) {
+		return {x: x, y: y};
 	});
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
@@ -4783,8 +4790,13 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
+	var to = A2(author$project$Main$Point, 0, 100);
+	var fro = A2(author$project$Main$Point, 100, 100);
+	var linel = A2(author$project$Main$Line, to, fro);
 	return _Utils_Tuple2(
-		A2(author$project$Main$Model, 5, 120),
+		author$project$Main$Model(
+			_List_fromArray(
+				[linel])),
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4792,36 +4804,10 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Main$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Main$factorial = function (i) {
-	return (!i) ? 1 : (i * author$project$Main$factorial(i - 1));
-};
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var elm$core$String$toInt = _String_toInt;
 var author$project$Main$update = F2(
 	function (msg, model) {
-		var s = msg.a;
-		var num = A2(
-			elm$core$Maybe$withDefault,
-			0,
-			elm$core$String$toInt(s));
-		var fact = author$project$Main$factorial(num);
-		return _Utils_Tuple2(
-			_Utils_update(
-				model,
-				{fact: fact, num: num}),
-			elm$core$Platform$Cmd$none);
+		return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 	});
-var author$project$Main$Num = function (a) {
-	return {$: 'Num', a: a};
-};
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -4840,32 +4826,28 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$html$Html$input = _VirtualDom_node('input');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
-var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
-var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
+var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var author$project$Main$toAtrMsg = function (l) {
+	return _List_fromArray(
+		[
+			elm$svg$Svg$Attributes$x1(
+			elm$core$String$fromInt(l.to.x)),
+			elm$svg$Svg$Attributes$y1(
+			elm$core$String$fromInt(l.to.y)),
+			elm$svg$Svg$Attributes$x2(
+			elm$core$String$fromInt(l.fro.x)),
+			elm$svg$Svg$Attributes$y2(
+			elm$core$String$fromInt(l.fro.y))
+		]);
 };
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
+var author$project$Main$toSvg = function (l) {
+	return A2(elm$svg$Svg$line, l, _List_Nil);
 };
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -4921,63 +4903,65 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
 	});
-var elm$json$Json$Decode$string = _Json_decodeString;
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+var author$project$Main$toSvgList = function (listl) {
+	var l = A2(elm$core$List$map, author$project$Main$toAtrMsg, listl);
+	return A2(elm$core$List$map, author$project$Main$toSvg, l);
 };
-var author$project$Main$viewInput = F4(
-	function (t, p, v, toMsg) {
-		return A2(
-			elm$html$Html$input,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$type_(t),
-					elm$html$Html$Attributes$placeholder(p),
-					elm$html$Html$Attributes$value(v),
-					elm$html$Html$Events$onInput(toMsg)
-				]),
-			_List_Nil);
-	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var author$project$Main$view = function (model) {
+	var l = author$project$Main$toSvgList(model.lineList);
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				A4(
-				author$project$Main$viewInput,
-				'text',
-				'number',
-				elm$core$String$fromInt(model.num),
-				author$project$Main$Num),
 				A2(
 				elm$html$Html$h1,
 				_List_Nil,
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						elm$core$String$fromInt(model.fact))
-					]))
+						elm$core$String$fromInt(2))
+					])),
+				A2(
+				elm$svg$Svg$svg,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$width('120'),
+						elm$svg$Svg$Attributes$height('120'),
+						elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
+						elm$svg$Svg$Attributes$fill('white'),
+						elm$svg$Svg$Attributes$stroke('black'),
+						elm$svg$Svg$Attributes$strokeWidth('3'),
+						A2(elm$html$Html$Attributes$style, 'padding-left', '20px')
+					]),
+				l)
 			]));
 };
 var elm$browser$Browser$External = function (a) {
@@ -5003,20 +4987,6 @@ var elm$core$Task$Perform = function (a) {
 };
 var elm$core$Task$succeed = _Scheduler_succeed;
 var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
 var elm$core$Task$andThen = _Scheduler_andThen;
 var elm$core$Task$map = F2(
 	function (func, taskA) {
@@ -5113,6 +5083,7 @@ var elm$core$String$left = F2(
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
 var elm$core$String$contains = _String_contains;
+var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};

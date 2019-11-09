@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg(..), init, main, subscriptions, svgCirclesForDieFace, update, view)
+module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
 import Html exposing (..)
@@ -63,7 +63,7 @@ view model =
         , svg
             [ width "120", height "120", viewBox "0 0 120 120", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style "padding-left" "20px" ]
             [ line
-                [ x1 "100"
+                [ x1 "0"
                 , x2 "100"
                 , y1 "0"
                 , y2 "100"
