@@ -1,4 +1,5 @@
-module Main exposing (Model, Msg(..), init, main, subscriptions, svgCirclesForDieFace, update, view)
+module Main exposing (..)
+
 
 import Browser
 import Html exposing (..)
@@ -19,14 +20,29 @@ main =
 
 -- MODEL
 
+type alias Point = {
+    x: Int,
+    y: Int,
+}
+
+type alias Line = {
+    to: Point,
+    fro: Point
+}
 
 type alias Model =
-    {}
+    {
+        lineList: List Line
+    }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model, Cmd.none )
+    let
+        to = Point 0 100
+        fro = Point 100 100
+        linel = Line to fro
+    ( Model [linel], Cmd.none )
 
 
 
@@ -52,7 +68,6 @@ subscriptions model =
     Sub.none
 
 
-
 -- VIEW
 
 
@@ -71,3 +86,5 @@ view model =
                 []
             ]
         ]
+
+
