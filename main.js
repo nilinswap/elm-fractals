@@ -4797,7 +4797,7 @@ var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
 		A2(
 			author$project$Main$Model,
-			7,
+			6,
 			_List_fromArray(
 				[linel])),
 		elm$core$Platform$Cmd$none);
@@ -4824,6 +4824,7 @@ var author$project$Main$fractal = F3(
 			var m = A2(author$project$Main$Point, ((fissionLine.to.x + fissionLine.fro.x) / 2) | 0, ((fissionLine.to.y + fissionLine.fro.y) / 2) | 0);
 			var lll = function () {
 				if (_Utils_eq(fissionLine.to.x, fissionLine.fro.x)) {
+					var d = A2(author$project$Main$Point, m.x, fissionLine.to.y);
 					var c = A2(author$project$Main$Point, m.x, fissionLine.fro.y);
 					var b = A2(
 						author$project$Main$Point,
@@ -4837,7 +4838,8 @@ var author$project$Main$fractal = F3(
 						[
 							A2(author$project$Main$Line, m, a),
 							A2(author$project$Main$Line, m, b),
-							A2(author$project$Main$Line, m, c)
+							A2(author$project$Main$Line, m, c),
+							A2(author$project$Main$Line, m, d)
 						]);
 					var llll = _Utils_ap(
 						ld,
@@ -4853,14 +4855,21 @@ var author$project$Main$fractal = F3(
 									ll,
 									A2(author$project$Main$Line, m, b),
 									level - 1),
-								A3(
-									author$project$Main$fractal,
-									ll,
-									A2(author$project$Main$Line, m, c),
-									level - 1))));
+								_Utils_ap(
+									A3(
+										author$project$Main$fractal,
+										ll,
+										A2(author$project$Main$Line, m, c),
+										level - 1),
+									A3(
+										author$project$Main$fractal,
+										ll,
+										A2(author$project$Main$Line, m, d),
+										level - 1)))));
 					return llll;
 				} else {
 					if (_Utils_eq(fissionLine.to.y, fissionLine.fro.y)) {
+						var d = A2(author$project$Main$Point, fissionLine.to.x, m.y);
 						var c = A2(author$project$Main$Point, fissionLine.fro.x, m.y);
 						var b = A2(
 							author$project$Main$Point,
@@ -4874,7 +4883,8 @@ var author$project$Main$fractal = F3(
 							[
 								A2(author$project$Main$Line, m, a),
 								A2(author$project$Main$Line, m, b),
-								A2(author$project$Main$Line, m, c)
+								A2(author$project$Main$Line, m, c),
+								A2(author$project$Main$Line, m, d)
 							]);
 						var llll = _Utils_ap(
 							ld,
@@ -4890,11 +4900,17 @@ var author$project$Main$fractal = F3(
 										ll,
 										A2(author$project$Main$Line, m, b),
 										level - 1),
-									A3(
-										author$project$Main$fractal,
-										ll,
-										A2(author$project$Main$Line, m, c),
-										level - 1))));
+									_Utils_ap(
+										A3(
+											author$project$Main$fractal,
+											ll,
+											A2(author$project$Main$Line, m, c),
+											level - 1),
+										A3(
+											author$project$Main$fractal,
+											ll,
+											A2(author$project$Main$Line, m, d),
+											level - 1)))));
 						return llll;
 					} else {
 						return ll;
