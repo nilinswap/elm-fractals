@@ -17,6 +17,7 @@ main =
 
 
 
+
 -- MODEL
 
 
@@ -116,3 +117,15 @@ view model =
             [ width "120", height "120", viewBox "0 0 120 120", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style "padding-left" "20px" ]
             l
         ]
+
+
+fractal: List Line -> Line -> Int -> List Line
+fractal ll fissionLine level  =
+    let
+        m = Point ((fissionLine.to.x + fissionLine.fro.x)//2) ((fissionLine.to.y + fissionLine.fro.y)//2)
+        if fissionLine.to.x == fissionLine.fro.y then
+            a = Point (m.x + fissionLine.to.y )
+            ll ++ [Line m ]
+
+
+    in
