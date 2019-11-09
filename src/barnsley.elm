@@ -33,7 +33,8 @@ type alias Line =
 
 
 type alias Model =
-    { lineList : List Line
+    { level : Int
+    , lineList : List Line
     }
 
 
@@ -49,7 +50,7 @@ init _ =
         linel =
             Line to fro
     in
-    ( Model [ linel ], Cmd.none )
+    ( Model 7 [ linel ], Cmd.none )
 
 
 
@@ -117,13 +118,13 @@ view model =
             Line to fro
 
         fractal_l =
-            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) 6
+            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) model.level
 
         l =
             toSvgList fractal_l
     in
     div []
-        [ h1 [] [ Html.text (String.fromInt 2) ]
+        [ h1 [] [ Html.text (String.fromInt model.level) ]
         , svg
             [ width "1000", height "1000", viewBox "0 0 2000 2000", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style "padding-left" "20px" ]
             l
@@ -134,12 +135,6 @@ fractal : List Line -> Line -> Int -> List Line
 fractal ll fissionLine level =
     if not (level == 0) then
         let
-            lev =
-                Debug.log "level" level
-
-            lld =
-                Debug.log "ll" ll
-
             m =
                 Point ((fissionLine.to.x + fissionLine.fro.x) // 2) ((fissionLine.to.y + fissionLine.fro.y) // 2)
 

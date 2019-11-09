@@ -4305,9 +4305,10 @@ var author$project$Main$Line = F2(
 	function (to, fro) {
 		return {fro: fro, to: to};
 	});
-var author$project$Main$Model = function (lineList) {
-	return {lineList: lineList};
-};
+var author$project$Main$Model = F2(
+	function (level, lineList) {
+		return {level: level, lineList: lineList};
+	});
 var author$project$Main$Point = F2(
 	function (x, y) {
 		return {x: x, y: y};
@@ -4794,7 +4795,9 @@ var author$project$Main$init = function (_n0) {
 	var fro = A2(author$project$Main$Point, 1000, 1000);
 	var linel = A2(author$project$Main$Line, to, fro);
 	return _Utils_Tuple2(
-		author$project$Main$Model(
+		A2(
+			author$project$Main$Model,
+			7,
 			_List_fromArray(
 				[linel])),
 		elm$core$Platform$Cmd$none);
@@ -4815,7 +4818,6 @@ var elm$core$Basics$abs = function (n) {
 	return (n < 0) ? (-n) : n;
 };
 var elm$core$Basics$not = _Basics_not;
-var elm$core$Debug$log = _Debug_log;
 var author$project$Main$fractal = F3(
 	function (ll, fissionLine, level) {
 		if (!(!level)) {
@@ -4899,8 +4901,6 @@ var author$project$Main$fractal = F3(
 					}
 				}
 			}();
-			var lld = A2(elm$core$Debug$log, 'll', ll);
-			var lev = A2(elm$core$Debug$log, 'level', level);
 			return lll;
 		} else {
 			return ll;
@@ -5061,7 +5061,7 @@ var author$project$Main$view = function (model) {
 			elm$core$Maybe$withDefault,
 			linel,
 			elm$core$List$head(model.lineList)),
-		6);
+		model.level);
 	var l = author$project$Main$toSvgList(fractal_l);
 	return A2(
 		elm$html$Html$div,
@@ -5074,7 +5074,7 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						elm$core$String$fromInt(2))
+						elm$core$String$fromInt(model.level))
 					])),
 				A2(
 				elm$svg$Svg$svg,
