@@ -4809,7 +4809,7 @@ var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
 		A3(
 			author$project$Main$Model,
-			2,
+			7,
 			_List_fromArray(
 				[tri]),
 			1000),
@@ -4823,6 +4823,35 @@ var author$project$Main$subscriptions = function (model) {
 var author$project$Main$update = F2(
 	function (msg, model) {
 		return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+	});
+var elm$core$Basics$not = _Basics_not;
+var author$project$Main$fractal = F3(
+	function (lt, encTri, level) {
+		if (!(!level)) {
+			var z = encTri.c.to;
+			var y = encTri.b.to;
+			var x = encTri.a.to;
+			var m3 = A2(author$project$Main$Point, ((z.x + x.x) / 2) | 0, ((z.y + x.y) / 2) | 0);
+			var m2 = A2(author$project$Main$Point, ((y.x + z.x) / 2) | 0, ((y.y + z.y) / 2) | 0);
+			var smallTri2 = A3(author$project$Main$makeTriangle, m2, m3, z);
+			var m1 = A2(author$project$Main$Point, ((x.x + y.x) / 2) | 0, ((x.y + y.y) / 2) | 0);
+			var newTri = A3(author$project$Main$makeTriangle, m1, m2, m3);
+			var smallTri1 = A3(author$project$Main$makeTriangle, m1, m2, y);
+			var smallTri3 = A3(author$project$Main$makeTriangle, m3, m1, x);
+			var newLt = _Utils_ap(
+				_List_fromArray(
+					[newTri]),
+				_Utils_ap(
+					A3(author$project$Main$fractal, lt, smallTri1, level - 1),
+					_Utils_ap(
+						A3(author$project$Main$fractal, lt, smallTri2, level - 1),
+						_Utils_ap(
+							A3(author$project$Main$fractal, lt, smallTri3, level - 1),
+							lt))));
+			return newLt;
+		} else {
+			return lt;
+		}
 	});
 var author$project$Main$toLineList = function (t) {
 	return _List_fromArray(
@@ -4957,6 +4986,24 @@ var author$project$Main$toSvgTriangleList = function (listri) {
 	var listoflines = elm$core$List$concat(listoflist);
 	return author$project$Main$toSvgList(listoflines);
 };
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -4971,10 +5018,19 @@ var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
 var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var author$project$Main$view = function (model) {
-	var to = A2(author$project$Main$Point, 0, 100);
-	var l = author$project$Main$toSvgTriangleList(model.triangleList);
-	var fro = A2(author$project$Main$Point, 100, 100);
-	var linel = A2(author$project$Main$Line, to, fro);
+	var z = A2(author$project$Main$Point, 500, 0);
+	var y = A2(author$project$Main$Point, 1000, 870);
+	var x = A2(author$project$Main$Point, 0, 870);
+	var defaultTriangle = A3(author$project$Main$makeTriangle, x, y, z);
+	var fractal_t = A3(
+		author$project$Main$fractal,
+		model.triangleList,
+		A2(
+			elm$core$Maybe$withDefault,
+			defaultTriangle,
+			elm$core$List$head(model.triangleList)),
+		model.level);
+	var l = author$project$Main$toSvgTriangleList(fractal_t);
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,

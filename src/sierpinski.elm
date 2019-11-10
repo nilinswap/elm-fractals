@@ -61,7 +61,7 @@ init _ =
         tri =
             makeTriangle x y z
     in
-    ( Model 2 [ tri ] 1000, Cmd.none )
+    ( Model 7 [ tri ] 1000, Cmd.none )
 
 
 
@@ -151,19 +151,23 @@ toSvgTriangleList listri =
 view : Model -> Html Msg
 view model =
     let
-        to =
-            Point 0 100
+        x =
+            Point 0 870
 
-        fro =
-            Point 100 100
+        y =
+            Point 1000 870
 
-        linel =
-            Line to fro
+        z =
+            Point 500 0
 
-        --        fractal_l =
-        --            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) model.level
+        defaultTriangle =
+            makeTriangle x y z
+
+        fractal_t =
+            fractal model.triangleList (Maybe.withDefault defaultTriangle (List.head model.triangleList)) model.level
+
         l =
-            toSvgTriangleList model.triangleList
+            toSvgTriangleList fractal_t
     in
     div []
         [ h1 [] [ Html.text (String.fromInt model.level) ]
