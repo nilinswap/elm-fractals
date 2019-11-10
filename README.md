@@ -20,7 +20,7 @@ See page at `file://<path-to-index.html>` at browser.
 ## Fractals
 - sierpinski.elm ![Sierpinski](producedFractals/sierpinski_gasket.png)
 - barnsley.elm ![Barnsley](producedFractals/barnsley.png)
-- mesh.elm ![Mesh](producedFractals/mesh.png)
+- mesh.elm ![Mesh](producedFractals/mesh.png) 
 
 Note: change level field in model to mention the recursion level.
 
