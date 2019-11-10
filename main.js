@@ -4301,10 +4301,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Line = F2(
-	function (to, fro) {
-		return {fro: fro, to: to};
-	});
 var author$project$Main$Model = F3(
 	function (level, triangleList, length) {
 		return {length: length, level: level, triangleList: triangleList};
@@ -4313,9 +4309,20 @@ var author$project$Main$Point = F2(
 	function (x, y) {
 		return {x: x, y: y};
 	});
+var author$project$Main$Line = F2(
+	function (to, fro) {
+		return {fro: fro, to: to};
+	});
 var author$project$Main$Triangle = F3(
 	function (a, b, c) {
 		return {a: a, b: b, c: c};
+	});
+var author$project$Main$makeTriangle = F3(
+	function (x, y, z) {
+		var c = A2(author$project$Main$Line, z, x);
+		var b = A2(author$project$Main$Line, y, z);
+		var a = A2(author$project$Main$Line, x, y);
+		return A3(author$project$Main$Triangle, a, b, c);
 	});
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
@@ -4798,10 +4805,7 @@ var author$project$Main$init = function (_n0) {
 	var z = A2(author$project$Main$Point, 500, 0);
 	var y = A2(author$project$Main$Point, 1000, 870);
 	var x = A2(author$project$Main$Point, 0, 870);
-	var c = A2(author$project$Main$Line, z, x);
-	var b = A2(author$project$Main$Line, y, z);
-	var a = A2(author$project$Main$Line, x, y);
-	var tri = A3(author$project$Main$Triangle, a, b, c);
+	var tri = A3(author$project$Main$makeTriangle, x, y, z);
 	return _Utils_Tuple2(
 		A3(
 			author$project$Main$Model,

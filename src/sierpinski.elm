@@ -58,17 +58,8 @@ init _ =
         z =
             Point 500 0
 
-        a =
-            Line x y
-
-        b =
-            Line y z
-
-        c =
-            Line z x
-
         tri =
-            Triangle a b c
+            makeTriangle x y z
     in
     ( Model 2 [ tri ] 1000, Cmd.none )
 
@@ -103,6 +94,21 @@ toAtrMsg l =
     , x2 (String.fromInt l.fro.x)
     , y2 (String.fromInt l.fro.y)
     ]
+
+
+makeTriangle : Point -> Point -> Point -> Triangle
+makeTriangle x y z =
+    let
+        a =
+            Line x y
+
+        b =
+            Line y z
+
+        c =
+            Line z x
+    in
+    Triangle a b c
 
 
 toSvg : List (Svg.Attribute msg) -> Svg msg
@@ -172,30 +178,43 @@ fractal lt encTri level =
     if not (level == 0) then
         let
             x =
-                Point ((encTri.a.to.x + encTri.b.to.x) // 2) ((encTri.a.to.y + encTri.b.to.y) // 2)
+                encTri.a.to
 
             y =
-                Point ((encTri.b.to.x + encTri.c.to.x) // 2) ((encTri.b.to.y + encTri.c.to.y) // 2)
+                encTri.b.to
 
             z =
-                Point ((encTri.c.to.x + encTri.a.to.x) // 2) ((encTri.c.to.y + encTri.a.to.y) // 2)
+                encTri.c.to
 
-            a =
-                Line x y
+            m1 =
+                Point ((x.x + y.x) // 2) ((x.y + y.y) // 2)
 
-            b =
-                Line y z
+            m2 =
+                Point ((y.x + z.x) // 2) ((y.y + z.y) // 2)
 
-            c =
-                Line z x
+            m3 =
+                Point ((z.x + x.x) // 2) ((z.y + x.y) // 2)
 
             newTri =
-                Triangle a b c
+                makeTriangle m1 m2 m3
+
+            smallTri1 =
+                makeTriangle m1 m2 y
+
+            smallTri2 =
+                makeTriangle m2 m3 z
+
+            smallTri3 =
+                makeTriangle m3 m1 x
 
             newLt =
                 [ newTri ]
+                    ++ fractal lt smallTri1 (level - 1)
+                    ++ fractal lt smallTri2 (level - 1)
+                    ++ fractal lt smallTri3 (level - 1)
+                    ++ lt
         in
-        lt
+        newLt
 
     else
         lt
