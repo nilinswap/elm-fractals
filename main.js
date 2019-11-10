@@ -4305,13 +4305,17 @@ var author$project$Main$Line = F2(
 	function (to, fro) {
 		return {fro: fro, to: to};
 	});
-var author$project$Main$Model = F2(
-	function (level, lineList) {
-		return {level: level, lineList: lineList};
+var author$project$Main$Model = F3(
+	function (level, triangleList, length) {
+		return {length: length, level: level, triangleList: triangleList};
 	});
 var author$project$Main$Point = F2(
 	function (x, y) {
 		return {x: x, y: y};
+	});
+var author$project$Main$Triangle = F3(
+	function (a, b, c) {
+		return {a: a, b: b, c: c};
 	});
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
@@ -4791,15 +4795,20 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
-	var to = A2(author$project$Main$Point, 0, 1000);
-	var fro = A2(author$project$Main$Point, 1000, 1000);
-	var linel = A2(author$project$Main$Line, to, fro);
+	var z = A2(author$project$Main$Point, 500, 0);
+	var y = A2(author$project$Main$Point, 1000, 870);
+	var x = A2(author$project$Main$Point, 0, 870);
+	var c = A2(author$project$Main$Line, z, x);
+	var b = A2(author$project$Main$Line, y, z);
+	var a = A2(author$project$Main$Line, x, y);
+	var tri = A3(author$project$Main$Triangle, a, b, c);
 	return _Utils_Tuple2(
-		A2(
+		A3(
 			author$project$Main$Model,
-			6,
+			2,
 			_List_fromArray(
-				[linel])),
+				[tri]),
+			1000),
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4811,117 +4820,10 @@ var author$project$Main$update = F2(
 	function (msg, model) {
 		return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
+var author$project$Main$toLineList = function (t) {
+	return _List_fromArray(
+		[t.a, t.b, t.c]);
 };
-var elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
-var elm$core$Basics$not = _Basics_not;
-var author$project$Main$fractal = F3(
-	function (ll, fissionLine, level) {
-		if (!(!level)) {
-			var m = A2(author$project$Main$Point, ((fissionLine.to.x + fissionLine.fro.x) / 2) | 0, ((fissionLine.to.y + fissionLine.fro.y) / 2) | 0);
-			var lll = function () {
-				if (_Utils_eq(fissionLine.to.x, fissionLine.fro.x)) {
-					var d = A2(author$project$Main$Point, m.x, fissionLine.to.y);
-					var c = A2(author$project$Main$Point, m.x, fissionLine.fro.y);
-					var b = A2(
-						author$project$Main$Point,
-						m.x - (((elm$core$Basics$abs(fissionLine.to.y) - fissionLine.fro.y) / 2) | 0),
-						m.y);
-					var a = A2(
-						author$project$Main$Point,
-						m.x + (((elm$core$Basics$abs(fissionLine.to.y) - fissionLine.fro.y) / 2) | 0),
-						m.y);
-					var ld = _List_fromArray(
-						[
-							A2(author$project$Main$Line, m, a),
-							A2(author$project$Main$Line, m, b),
-							A2(author$project$Main$Line, m, c),
-							A2(author$project$Main$Line, m, d)
-						]);
-					var llll = _Utils_ap(
-						ld,
-						_Utils_ap(
-							A3(
-								author$project$Main$fractal,
-								ll,
-								A2(author$project$Main$Line, m, a),
-								level - 1),
-							_Utils_ap(
-								A3(
-									author$project$Main$fractal,
-									ll,
-									A2(author$project$Main$Line, m, b),
-									level - 1),
-								_Utils_ap(
-									A3(
-										author$project$Main$fractal,
-										ll,
-										A2(author$project$Main$Line, m, c),
-										level - 1),
-									A3(
-										author$project$Main$fractal,
-										ll,
-										A2(author$project$Main$Line, m, d),
-										level - 1)))));
-					return llll;
-				} else {
-					if (_Utils_eq(fissionLine.to.y, fissionLine.fro.y)) {
-						var d = A2(author$project$Main$Point, fissionLine.to.x, m.y);
-						var c = A2(author$project$Main$Point, fissionLine.fro.x, m.y);
-						var b = A2(
-							author$project$Main$Point,
-							m.x,
-							m.y - (((elm$core$Basics$abs(fissionLine.to.x) - fissionLine.fro.x) / 2) | 0));
-						var a = A2(
-							author$project$Main$Point,
-							m.x,
-							m.y + (((elm$core$Basics$abs(fissionLine.to.x) - fissionLine.fro.x) / 2) | 0));
-						var ld = _List_fromArray(
-							[
-								A2(author$project$Main$Line, m, a),
-								A2(author$project$Main$Line, m, b),
-								A2(author$project$Main$Line, m, c),
-								A2(author$project$Main$Line, m, d)
-							]);
-						var llll = _Utils_ap(
-							ld,
-							_Utils_ap(
-								A3(
-									author$project$Main$fractal,
-									ll,
-									A2(author$project$Main$Line, m, a),
-									level - 1),
-								_Utils_ap(
-									A3(
-										author$project$Main$fractal,
-										ll,
-										A2(author$project$Main$Line, m, b),
-										level - 1),
-									_Utils_ap(
-										A3(
-											author$project$Main$fractal,
-											ll,
-											A2(author$project$Main$Line, m, c),
-											level - 1),
-										A3(
-											author$project$Main$fractal,
-											ll,
-											A2(author$project$Main$Line, m, d),
-											level - 1)))));
-						return llll;
-					} else {
-						return ll;
-					}
-				}
-			}();
-			return lll;
-		} else {
-			return ll;
-		}
-	});
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5035,24 +4937,22 @@ var author$project$Main$toSvgList = function (listl) {
 	var l = A2(elm$core$List$map, author$project$Main$toAtrMsg, listl);
 	return A2(elm$core$List$map, author$project$Main$toSvg, l);
 };
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
 		} else {
-			return _default;
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
 		}
 	});
+var elm$core$List$concat = function (lists) {
+	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
+};
+var author$project$Main$toSvgTriangleList = function (listri) {
+	var listoflist = A2(elm$core$List$map, author$project$Main$toLineList, listri);
+	var listoflines = elm$core$List$concat(listoflist);
+	return author$project$Main$toSvgList(listoflines);
+};
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -5068,17 +4968,9 @@ var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var author$project$Main$view = function (model) {
 	var to = A2(author$project$Main$Point, 0, 100);
+	var l = author$project$Main$toSvgTriangleList(model.triangleList);
 	var fro = A2(author$project$Main$Point, 100, 100);
 	var linel = A2(author$project$Main$Line, to, fro);
-	var fractal_l = A3(
-		author$project$Main$fractal,
-		model.lineList,
-		A2(
-			elm$core$Maybe$withDefault,
-			linel,
-			elm$core$List$head(model.lineList)),
-		model.level);
-	var l = author$project$Main$toSvgList(fractal_l);
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,

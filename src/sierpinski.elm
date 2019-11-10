@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Main exposing (Line, Model, Msg(..), Point, Triangle, fractal, init, main, subscriptions, toAtrMsg, toLineList, toSvg, toSvgList, toSvgTriangleList, update, view)
 
 import Browser
 import Html exposing (..)
@@ -31,17 +31,18 @@ type alias Line =
     , fro : Point
     }
 
-type alias Triangle=
-    {a: Line
-    ,b: Line
-    ,c: Line
+
+type alias Triangle =
+    { a : Line
+    , b : Line
+    , c : Line
     }
 
 
 type alias Model =
     { level : Int
     , triangleList : List Triangle
-    , length: Int
+    , length : Int
     }
 
 
@@ -59,13 +60,15 @@ init _ =
 
         a =
             Line x y
+
         b =
             Line y z
+
         c =
             Line z x
 
-        tri = Triangle a b c
-
+        tri =
+            Triangle a b c
     in
     ( Model 2 [ tri ] 1000, Cmd.none )
 
@@ -117,9 +120,22 @@ toSvgList listl =
     in
     List.map toSvg l
 
-toSvgTriangleList: List Triangle -> List (Svg msg)
+
+toLineList : Triangle -> List Line
+toLineList t =
+    [ t.a, t.b, t.c ]
+
+
+toSvgTriangleList : List Triangle -> List (Svg msg)
 toSvgTriangleList listri =
     let
+        listoflist =
+            List.map toLineList listri
+
+        listoflines =
+            List.concat listoflist
+    in
+    toSvgList listoflines
 
 
 
@@ -138,11 +154,10 @@ view model =
         linel =
             Line to fro
 
-        fractal_l =
-            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) model.level
-
+        --        fractal_l =
+        --            fractal model.lineList (Maybe.withDefault linel (List.head model.lineList)) model.level
         l =
-            toSvgList fractal_l
+            toSvgTriangleList model.triangleList
     in
     div []
         [ h1 [] [ Html.text (String.fromInt model.level) ]
@@ -152,73 +167,35 @@ view model =
         ]
 
 
-fractal : List Line -> Line -> Int -> List Line
-fractal ll fissionLine level =
+fractal : List Triangle -> Triangle -> Int -> List Triangle
+fractal lt encTri level =
     if not (level == 0) then
         let
-            m =
-                Point ((fissionLine.to.x + fissionLine.fro.x) // 2) ((fissionLine.to.y + fissionLine.fro.y) // 2)
+            x =
+                Point ((encTri.a.to.x + encTri.b.to.x) // 2) ((encTri.a.to.y + encTri.b.to.y) // 2)
 
-            lll =
-                if fissionLine.to.x == fissionLine.fro.x then
-                    let
-                        a =
-                            Point (m.x + (abs fissionLine.to.y - fissionLine.fro.y) // 2) m.y
+            y =
+                Point ((encTri.b.to.x + encTri.c.to.x) // 2) ((encTri.b.to.y + encTri.c.to.y) // 2)
 
-                        -- mid to right
-                        b =
-                            Point (m.x - (abs fissionLine.to.y - fissionLine.fro.y) // 2) m.y
+            z =
+                Point ((encTri.c.to.x + encTri.a.to.x) // 2) ((encTri.c.to.y + encTri.a.to.y) // 2)
 
-                        -- mid to left
-                        c =
-                            Point m.x fissionLine.fro.y
+            a =
+                Line x y
 
-                        ld =
-                            [ Line m a
-                            , Line m b
-                            , Line m c
-                            ]
+            b =
+                Line y z
 
-                        llll =
-                            ld
-                                ++ fractal ll (Line m a) (level - 1)
-                                ++ fractal ll (Line m b) (level - 1)
-                                ++ fractal ll (Line m c) (level - 1)
-                    in
-                    llll
+            c =
+                Line z x
 
-                else if fissionLine.to.y == fissionLine.fro.y then
-                    let
-                        a =
-                            Point m.x (m.y + (abs fissionLine.to.x - fissionLine.fro.x) // 2)
+            newTri =
+                Triangle a b c
 
-                        -- mid to right
-                        b =
-                            Point m.x (m.y - (abs fissionLine.to.x - fissionLine.fro.x) // 2)
-
-                        -- mid to left
-                        c =
-                            Point fissionLine.fro.x m.y
-
-                        ld =
-                            [ Line m a
-                            , Line m b
-                            , Line m c
-                            ]
-
-                        llll =
-                            ld
-                                ++ fractal ll (Line m a) (level - 1)
-                                ++ fractal ll (Line m b) (level - 1)
-                                ++ fractal ll (Line m c) (level - 1)
-                    in
-                    llll
-
-                else
-                    ll
+            newLt =
+                [ newTri ]
         in
-        lll
+        lt
 
     else
-        ll
-elm
+        lt
