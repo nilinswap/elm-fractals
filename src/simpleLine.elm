@@ -59,8 +59,7 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ Html.text (String.fromInt 2) ]
-        , svg
+        [ svg
             [ width "120", height "120", viewBox "0 0 120 120", fill "white", stroke "black", strokeWidth "3", Html.Attributes.style "padding-left" "20px" ]
             [ line
                 [ x1 "0"

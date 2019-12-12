@@ -217,6 +217,7 @@ fractal lt encTri level =
                     ++ fractal lt smallTri2 (level - 1)
                     ++ fractal lt smallTri3 (level - 1)
                     ++ lt
+
         in
         newLt
 
