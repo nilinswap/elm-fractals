@@ -42,7 +42,6 @@ type alias Triangle =
 type alias Model =
     { level : Int
     , triangleList : List Triangle
-    , length : Int
     }
 
 
@@ -61,7 +60,7 @@ init _ =
         tri =
             makeTriangle x y z
     in
-    ( Model 7 [ tri ] 1000, Cmd.none )
+    ( Model 7 [ tri ], Cmd.none )
 
 
 
@@ -217,7 +216,6 @@ fractal lt encTri level =
                     ++ fractal lt smallTri2 (level - 1)
                     ++ fractal lt smallTri3 (level - 1)
                     ++ lt
-
         in
         newLt
 
