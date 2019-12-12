@@ -1,5 +1,6 @@
 # elm-fractals
     A small collections of fractals made using elm.
+Read my [journey](https://www.fifthtry.com/nilinswap/blog/hello-world/)
 
 ## How to run
 - install elm
